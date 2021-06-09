@@ -46,11 +46,6 @@ let allQuotes = [
 //     response.end(JSON.stringify(pedacitos));
 // });
 
-// ahora con express: cuando se haga una petición del tipo get al path "/"
-app.get("/", (req, res) => {
-    res.send("<h1>Hello world</h1>");
-});
-
 // método json() de express para parsear
 app.get("/api/pedacitos", (req, res) => {
     res.json(allQuotes);
