@@ -126,7 +126,7 @@ app.use((req, res) => {
 });
 
 // para deploy en heroku: lo saca de una variable de entorno
-const PORT = process.env.port || 3001;
+const PORT = process.env.port;
 
 //app.listen(PORT);
 // con express esta llamada es asíncrona: cuando el servidor esté levantado ejecuta la función
