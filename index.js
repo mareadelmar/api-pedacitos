@@ -59,7 +59,6 @@ app.put("/api/pedacitos/:id", (req, res, next) => {
 
     Quote.findByIdAndUpdate(id, newQuoteInfo, { new: true })
         .then((result) => {
-            // NO ME DEVUELVE NADA --> solucionado: estaba mandand un status antes
             res.json(result);
         })
         .catch((error) => next(error));
@@ -91,17 +90,15 @@ app.post("/api/pedacitos", (req, res) => {
     });
 });
 
-// si no encuentra la ruta, entraría acá
+// si no encuentra la ruta
 app.use(notFound);
 
-// agregamos un middleware especial para que intercepte errores: primer parámetro los errores
+// middleware especial para que intercepte errores: primer parámetro los errores
 app.use(handleError);
 
 // para deploy en heroku: lo saca de una variable de entorno
 const PORT = process.env.PORT;
 
-//app.listen(PORT);
-// con express esta llamada es asíncrona: cuando el servidor esté levantado ejecuta la función
 app.listen(PORT, () => {
     console.log(`server is running at port ${PORT}`);
 });
