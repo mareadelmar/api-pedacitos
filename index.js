@@ -1,43 +1,26 @@
-// podríamos tmb importarlo como función y ejecutarla, pero así funciona xq los módulos se importan una vez y luego se catchean
+require("dotenv").config();
 require("./mongo");
 
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
 const Quote = require("./models/Quote");
 const notFound = require("./middleware/notFound");
 const handleError = require("./middleware/handleError");
 
 // MIDLEWARES
-// cors: accesible desde cualquier origen
 app.use(cors());
-// modulo body parser de express
 app.use(express.json());
 
-let quotes = [];
-
-// al createServer se le pasa un callback: se va a ejecutar cada vez que reciba una request
-// const app = http.createServer((request, response) => {
-//     response.writeHead(200, { "Content-Type": "application/json" });
-//     response.end(JSON.stringify(pedacitos));
-// });
-
-// método json() de express para parsear
+// GET
 app.get("/api/pedacitos", (req, res) => {
     Quote.find({}).then((data) => {
         res.json(data);
     });
 });
 
-// ruta dinámica
 app.get("/api/pedacitos/:id", (req, res, next) => {
-    // sacamos la id de los params del path
     const { id } = req.params;
-
-    /*
-    faltarían más validaciones?
-    */
 
     Quote.findById(id)
         .then((oneQuote) => {
@@ -48,18 +31,14 @@ app.get("/api/pedacitos/:id", (req, res, next) => {
             }
         })
         .catch((error) => {
-            // este error podría venirde distintos lugares. usamos los middleware para manejar todos los errores
             next(error);
-            // console.error(err);
-            // res.sendStatus(400).end();
         });
 });
 
+// DELETE
 app.delete("/api/pedacitos/:id", (req, res, next) => {
     const { id } = req.params;
 
-    // guardamos de nuevo todos menos el id seleccionado
-    // findByIdAndRemove??
     Quote.findByIdAndDelete(id)
         .then(() => {
             res.sendStatus(204).end(); // 204 no content
@@ -67,6 +46,7 @@ app.delete("/api/pedacitos/:id", (req, res, next) => {
         .catch((error) => next(error));
 });
 
+// PUT
 app.put("/api/pedacitos/:id", (req, res, next) => {
     const { id } = req.params;
     const quote = req.body;
@@ -77,8 +57,6 @@ app.put("/api/pedacitos/:id", (req, res, next) => {
         content: quote.content,
     };
 
-    // con este método mongoose nos evita un error común: que se creen dos distintas
-    // tercer parámetro: para que devuelva su versión modificada (si no devuelve la anterior)
     Quote.findByIdAndUpdate(id, newQuoteInfo, { new: true })
         .then((result) => {
             // NO ME DEVUELVE NADA --> solucionado: estaba mandand un status antes
@@ -87,17 +65,7 @@ app.put("/api/pedacitos/:id", (req, res, next) => {
         .catch((error) => next(error));
 });
 
-/*
-POST
-le vamos a pasar: 
-- title
-- author
-- content
-
-+ id y date van a ser generados después --> resolvemos así los ids porque dsp se hace con mongo
-+ para esto el body parser: permite que tengamos en request.body el recurso que queremos mandar.
-*/
-
+// POST
 app.post("/api/pedacitos", (req, res) => {
     const quote = req.body;
     console.log(quote);
