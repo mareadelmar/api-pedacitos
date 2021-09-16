@@ -12,12 +12,8 @@ mongoose
     .catch((err) => console.error(err));
 
 /*
-
 si hay un error, que desconecte el servidor.
-
-process.on("uncaughtException", ()=>{
-    mongoose.connection.disconnect();
-})
-
-tengo que desconectarlo en otro lado?
 */
+process.on("uncaughtException", ()=>{ 
+    mongoose.connection.disconnect();
+});
