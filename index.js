@@ -90,13 +90,11 @@ app.post("/api/pedacitos", (req, res) => {
     });
 });
 
-// si no encuentra la ruta
 app.use(notFound);
 
-// middleware especial para que intercepte errores: primer parámetro los errores
 app.use(handleError);
 
-// para deploy en heroku: lo saca de una variable de entorno
+// para deploy en heroku
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {

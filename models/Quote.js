@@ -10,7 +10,7 @@ const quotesSchema = new Schema({
 quotesSchema.set("toJSON", {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id;
-        delete returnedObject._id; // capaz no es la mejor forma
+        delete returnedObject._id; 
         delete returnedObject.__v;
     },
 });
